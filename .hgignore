@@ -1,0 +1,9 @@
+syntax: glob
+*.log
+*.suo
+Debug*
+Release*
+*.user
+ipch*
+packages*
+*.orig

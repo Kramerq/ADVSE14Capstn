@@ -1,0 +1,301 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using TweetSharp;
+
+namespace AdvancedSoftwareProject.Forms
+{
+    public partial class ApplicationSettings : Form
+    {
+        public ApplicationSettings()
+        {
+            InitializeComponent();
+        }
+
+        private void editEmailSettBTN_Click(object sender, EventArgs e)
+        {
+            if (editEmailSettBTN.Text == "Edit")
+            {
+                serverTB.ReadOnly = false;
+                portTB.ReadOnly = false;
+                userTB.ReadOnly = false;
+                passTB.ReadOnly = false;
+
+                editEmailSettBTN.Text = "Save";
+            }
+            else
+            {
+                serverTB.ReadOnly = true;
+                portTB.ReadOnly = true;
+                userTB.ReadOnly = true;
+                passTB.ReadOnly = true;
+
+                editEmailSettBTN.Text = "Edit";
+            }
+        }
+
+        private void cancelBTN_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void okBTN_Click(object sender, EventArgs e)
+        {
+            AdvancedSoftwareProject.Properties.Settings.Default.ToTwitter = twitterCB.Checked;
+            AdvancedSoftwareProject.Properties.Settings.Default.ToFacebook = fbCB.Checked;
+            AdvancedSoftwareProject.Properties.Settings.Default.ToEmail = emailCB.Checked;
+
+            AdvancedSoftwareProject.Properties.Settings.Default.smtpClient = serverTB.Text;
+            AdvancedSoftwareProject.Properties.Settings.Default.smtpPort = portTB.Text;
+            AdvancedSoftwareProject.Properties.Settings.Default.UserEmail = userTB.Text;
+            AdvancedSoftwareProject.Properties.Settings.Default.UserEmailPW = passTB.Text;
+            AdvancedSoftwareProject.Properties.Settings.Default.FBGroupID = FBgroupID.Text;
+
+
+
+            AdvancedSoftwareProject.Properties.Settings.Default.EmailMarginUniform = emailMarginCB.Checked;
+            AdvancedSoftwareProject.Properties.Settings.Default.FBMarginUniform = FBMarginCB.Checked;
+            AdvancedSoftwareProject.Properties.Settings.Default.TwitterMarginUnifrom = twitterMarginCB.Checked;
+
+
+            AdvancedSoftwareProject.Properties.Settings.Default.TwitterBottomMargin = (int)tBNUM.Value;
+            AdvancedSoftwareProject.Properties.Settings.Default.TwitterLeftMargin = (int)tLNUM.Value;
+            AdvancedSoftwareProject.Properties.Settings.Default.TwitterRightMargin = (int)tRNUM.Value;
+            AdvancedSoftwareProject.Properties.Settings.Default.TwitterTopMargin = (int)tTNUM.Value;
+
+            AdvancedSoftwareProject.Properties.Settings.Default.FBBottomMargin = (int)fBNUM.Value;
+            AdvancedSoftwareProject.Properties.Settings.Default.FBLeftMargin = (int)fLNUM.Value;
+            AdvancedSoftwareProject.Properties.Settings.Default.FBRightMargin = (int)fRNUM.Value;
+            AdvancedSoftwareProject.Properties.Settings.Default.FBTopMargin = (int)fTNUM.Value;
+
+            AdvancedSoftwareProject.Properties.Settings.Default.EmailBottomMargin = (int)eBNUM.Value;
+            AdvancedSoftwareProject.Properties.Settings.Default.EmailLeftMargin = (int)eLNUM.Value;
+            AdvancedSoftwareProject.Properties.Settings.Default.EmailRightMargin = (int)eRNUM.Value;
+            AdvancedSoftwareProject.Properties.Settings.Default.EmailTopMargin = (int)eTNUM.Value;
+
+
+            AdvancedSoftwareProject.Properties.Settings.Default.Save();
+
+            this.Close();
+        }
+
+        private void ApplicationSettings_Load(object sender, EventArgs e)
+        {
+            if (AdvancedSoftwareProject.Properties.Settings.Default.AccessToken == "" || AdvancedSoftwareProject.Properties.Settings.Default.AccessTokenSecret == "")
+            {
+                twitterAuthoLabel.Text = "Not Authorized";
+                twitterAuthoLabel.ForeColor = Color.Red;
+                twitterAuthBTN.Text = "Authorize";
+            }
+            else
+            {
+                twitterAuthoLabel.Text = "Authorized";
+                twitterAuthoLabel.ForeColor = Color.Green;
+                twitterAuthBTN.Text = "Deauthorize";
+            }
+
+            if (AdvancedSoftwareProject.Properties.Settings.Default.FBAccessToken == "")
+            {
+                FBStatusLBL.Text = "Not Authorized";
+                FBStatusLBL.ForeColor = Color.Red;
+                FBAuthBTN.Text = "Authorize";
+            }
+            else
+            {
+                FBStatusLBL.Text = "Authorized";
+                FBStatusLBL.ForeColor = Color.Green;
+                FBAuthBTN.Text = "Deauthorize";
+            }
+
+
+            twitterCB.Checked = AdvancedSoftwareProject.Properties.Settings.Default.ToTwitter;
+            fbCB.Checked = AdvancedSoftwareProject.Properties.Settings.Default.ToFacebook;
+            emailCB.Checked = AdvancedSoftwareProject.Properties.Settings.Default.ToEmail;
+
+            serverTB.Text = AdvancedSoftwareProject.Properties.Settings.Default.Server;
+            portTB.Text = AdvancedSoftwareProject.Properties.Settings.Default.Port;
+            userTB.Text = AdvancedSoftwareProject.Properties.Settings.Default.Username;
+            passTB.Text = AdvancedSoftwareProject.Properties.Settings.Default.Password;
+
+            twitterMarginCB.Checked = AdvancedSoftwareProject.Properties.Settings.Default.TwitterMarginUnifrom;
+            FBMarginCB.Checked = AdvancedSoftwareProject.Properties.Settings.Default.FBMarginUniform;
+            emailMarginCB.Checked = AdvancedSoftwareProject.Properties.Settings.Default.EmailMarginUniform;
+
+            eTNUM.Value = AdvancedSoftwareProject.Properties.Settings.Default.EmailTopMargin;
+            eLNUM.Value = AdvancedSoftwareProject.Properties.Settings.Default.EmailLeftMargin;
+            eRNUM.Value = AdvancedSoftwareProject.Properties.Settings.Default.EmailRightMargin;
+            eBNUM.Value = AdvancedSoftwareProject.Properties.Settings.Default.EmailBottomMargin;
+
+            fTNUM.Value = AdvancedSoftwareProject.Properties.Settings.Default.FBTopMargin;
+            fLNUM.Value = AdvancedSoftwareProject.Properties.Settings.Default.FBLeftMargin;
+            fRNUM.Value = AdvancedSoftwareProject.Properties.Settings.Default.FBRightMargin;
+            fBNUM.Value = AdvancedSoftwareProject.Properties.Settings.Default.FBBottomMargin;
+
+            tTNUM.Value = AdvancedSoftwareProject.Properties.Settings.Default.TwitterTopMargin;
+            tLNUM.Value = AdvancedSoftwareProject.Properties.Settings.Default.TwitterLeftMargin;
+            tRNUM.Value = AdvancedSoftwareProject.Properties.Settings.Default.TwitterRightMargin;
+            tBNUM.Value = AdvancedSoftwareProject.Properties.Settings.Default.TwitterBottomMargin;
+        }
+
+        private void twitterAuthBTN_Click(object sender, EventArgs e)
+        {
+            if(twitterAuthBTN.Text == "Authorize")
+            {
+                //Authorize Twitter
+            }
+            else
+            {
+                AdvancedSoftwareProject.Properties.Settings.Default.AccessToken = "";
+                AdvancedSoftwareProject.Properties.Settings.Default.AccessTokenSecret = "";
+                AdvancedSoftwareProject.Properties.Settings.Default.Save();
+
+                twitterAuthoLabel.Text = "Not Authorized";
+                twitterAuthoLabel.ForeColor = Color.Red;
+                twitterAuthBTN.Text = "Authorize";
+
+            }
+        }
+
+        private void FBAuthBTN_Click(object sender, EventArgs e)
+        {
+            if(FBAuthBTN.Text == "Authorize")
+            {
+                //Authorize Facebook
+            }
+            else
+            {
+                AdvancedSoftwareProject.Properties.Settings.Default.FBAccessToken = "";
+                AdvancedSoftwareProject.Properties.Settings.Default.Save();
+
+                FBAuthBTN.Text = "Authorize";
+                FBStatusLBL.Text = "Not Authorized";
+                FBStatusLBL.ForeColor = Color.Red;
+            }
+        }
+
+        private void emailMarginSame(int num)
+        {
+            eLNUM.Value = num;
+            eRNUM.Value = num;
+            eTNUM.Value = num;
+            eBNUM.Value = num;
+        }
+
+        private void facebookMarginSame(int num)
+        {
+            fLNUM.Value = num;
+            fRNUM.Value = num;
+            fTNUM.Value = num;
+            fBNUM.Value = num;
+        }
+
+        private void twitterMarginSame(int num)
+        {
+            tLNUM.Value = num;
+            tRNUM.Value = num;
+            tTNUM.Value = num;
+            tBNUM.Value = num;
+        }
+
+        private void eLNUM_ValueChanged(object sender, EventArgs e)
+        {
+            if (emailMarginCB.Checked)
+                emailMarginSame((int)eLNUM.Value);
+        }
+
+        private void eRNUM_ValueChanged(object sender, EventArgs e)
+        {
+            if (emailMarginCB.Checked)
+                emailMarginSame((int)eRNUM.Value);
+        }
+
+        private void eTNUM_ValueChanged(object sender, EventArgs e)
+        {
+            if (emailMarginCB.Checked)
+                emailMarginSame((int)eTNUM.Value);
+        }
+
+        private void eBNUM_ValueChanged(object sender, EventArgs e)
+        {
+            if (emailMarginCB.Checked)
+                emailMarginSame((int)eBNUM.Value);
+        }
+
+        private void fLNUM_ValueChanged(object sender, EventArgs e)
+        {
+            if(FBMarginCB.Checked)
+                facebookMarginSame((int)fLNUM.Value);
+        }
+
+        private void fRNUM_ValueChanged(object sender, EventArgs e)
+        {
+            if(FBMarginCB.Checked)
+                facebookMarginSame((int)fRNUM.Value);
+        }
+
+        private void fTNUM_ValueChanged(object sender, EventArgs e)
+        {
+            if(FBMarginCB.Checked)
+                facebookMarginSame((int)fTNUM.Value);
+        }
+
+        private void fBNUM_ValueChanged(object sender, EventArgs e)
+        {
+            if (FBMarginCB.Checked)
+                facebookMarginSame((int)fBNUM.Value);
+        }
+
+        private void tLNUM_ValueChanged(object sender, EventArgs e)
+        {
+            if (twitterMarginCB.Checked)
+                twitterMarginSame((int)tLNUM.Value);
+        }
+
+        private void tRNUM_ValueChanged(object sender, EventArgs e)
+        {
+            if (twitterMarginCB.Checked)
+                twitterMarginSame((int)tRNUM.Value);
+        }
+
+        private void tTNUM_ValueChanged(object sender, EventArgs e)
+        {
+            if (twitterMarginCB.Checked)
+                twitterMarginSame((int)tTNUM.Value);
+        }
+
+        private void tBNUM_ValueChanged(object sender, EventArgs e)
+        {
+            if (twitterMarginCB.Checked)
+                twitterMarginSame((int)tBNUM.Value);
+        }
+
+        private void emailMarginCB_CheckedChanged(object sender, EventArgs e)
+        {
+            if (emailMarginCB.Checked)
+                emailMarginSame((int)eLNUM.Value);
+        }
+
+        private void FBMarginCB_CheckedChanged(object sender, EventArgs e)
+        {
+            if (FBMarginCB.Checked)
+                facebookMarginSame((int)fLNUM.Value);
+        }
+
+        private void twitterMarginCB_CheckedChanged(object sender, EventArgs e)
+        {
+            if (twitterMarginCB.Checked)
+                twitterMarginSame((int)tLNUM.Value);
+        }
+
+        private void serverTB_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+    }
+}
